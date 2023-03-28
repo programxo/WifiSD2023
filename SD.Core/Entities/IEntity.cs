@@ -1,5 +1,8 @@
 ﻿namespace Wifi.SD.Core.Entities
 {
-    public interface IEntity { } // 1.
+    public interface IEntity // 1.
+    { 
+
+    } 
 }
 
