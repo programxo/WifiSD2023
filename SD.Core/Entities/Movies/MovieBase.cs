@@ -1,4 +1,7 @@
-﻿namespace Wifi.SD.Core.Entities.Movies
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Wifi.SD.Core.Entities.Movies
 {
     public abstract class MovieBase // 3.
     {

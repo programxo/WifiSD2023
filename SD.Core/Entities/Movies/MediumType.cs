@@ -1,4 +1,6 @@
-﻿namespace Wifi.SD.Core.Entities.Movies
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Wifi.SD.Core.Entities.Movies
 {
     public class MediumType // 6.
     {
