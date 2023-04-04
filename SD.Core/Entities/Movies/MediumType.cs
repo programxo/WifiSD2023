@@ -11,6 +11,7 @@ namespace Wifi.SD.Core.Entities.Movies
 
         // The virtual method is declared in a base class and has an implementation, but the child class may override the default implementation.
         [Key]
+        [MaxLength(8)]
         public virtual string Code { get; set; }
 
         [MaxLength(32), MinLength(2)]

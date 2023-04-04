@@ -23,6 +23,6 @@ namespace Wifi.SD.Core.Entities.Movies
         public int GenreId { get; set; }
 
         [MaxLength(8)]
-        public string MediumTypeCode { get; set; }
+        public string? MediumTypeCode { get; set; }
     }
 }
