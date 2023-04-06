@@ -49,7 +49,7 @@ namespace SD.Persistence.Repositories.Base
         #endregion
 
         #region [R]EAD
-        public IQueryable QueryFrom<T>(Expression<Func<T, bool>> whereFilter)
+        public IQueryable<T> QueryFrom<T>(Expression<Func<T, bool>> whereFilter)
             where T : class, IEntity
         {
             var query = this.movieDbContext.Set<T>();
