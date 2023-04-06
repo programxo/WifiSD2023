@@ -3,6 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Wifi.SD.Core.Entities.Movies
 {
+    public enum Ratings : byte
+    {
+        VeryBad = 1,
+        Bad,
+        Medium,
+        Good,
+        VeryGood
+    }
+
     public abstract class MovieBase // 3.
     {
         [Key] /* Nicht zwingend notwendig, da implizit als Schlüssel erkannt */
@@ -24,5 +33,7 @@ namespace Wifi.SD.Core.Entities.Movies
 
         [MaxLength(8)]
         public string? MediumTypeCode { get; set; }
+
+        public Ratings? Rating { get; set;}
     }
 }
