@@ -12,7 +12,7 @@ namespace SD.Application.Movies
 {
     [MapServiceDependency(nameof(MovieQueryHandler))]
     public class MovieQueryHandler : IRequestHandler<GetMovieDtoQuery, MovieDto>,
-                                     IRequestHandler<GetMoviesDtosQuery, IEnumerable<MovieDto>>
+                                     IRequestHandler<GetMovieDtosQuery, IEnumerable<MovieDto>>
     {
         protected readonly IMovieRepository movieRepository;
 
@@ -41,7 +41,7 @@ namespace SD.Application.Movies
             }
         }
 
-        public async Task<IEnumerable<MovieDto>> Handle(GetMoviesDtosQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MovieDto>> Handle(GetMovieDtosQuery request, CancellationToken cancellationToken)
         {
             var movieQuery = this.movieRepository.QueryFrom<Movie>();
 
