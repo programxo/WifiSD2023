@@ -6,13 +6,13 @@ using Wifi.SD.Core.Attributes;
 using Wifi.SD.Core.Entities.Movies;
 using Wifi.SD.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
-
+using SD.Application.Base;
 
 namespace SD.Application.Movies
 {
     [MapServiceDependency(nameof(MovieQueryHandler))]
     public class MovieQueryHandler : IRequestHandler<GetMovieDtoQuery, MovieDto>,
-                                     IRequestHandler<GetMovieDtosQuery, IEnumerable<MovieDto>>
+                                                  IRequestHandler<GetMovieDtosQuery, IEnumerable<MovieDto>>
     {
         protected readonly IMovieRepository movieRepository;
 
@@ -65,10 +65,12 @@ namespace SD.Application.Movies
                 movieQuery = movieQuery.Skip(request.Skip).Take(request.Take); // Pager-Funktion in EF mit Linq
             }
 
-            var movieDtos = new List<MovieDto>();
-            var movies = await movieQuery.ToListAsync(cancellationToken);
+            var movieDtos = await movieQuery.Select(s => MovieDto.MapFrom(s)).ToListAsync(cancellationToken);
 
-            movies.ForEach(m => movieDtos.Add(MovieDto.MapFrom(m)));
+            //var movieDtos = new List<MovieDto>();
+            //var movies = await movieQuery.ToListAsync(cancellationToken);
+
+            //movies.ForEach(m => movieDtos.Add(MovieDto.MapFrom(m)));
 
             return movieDtos;
         }
