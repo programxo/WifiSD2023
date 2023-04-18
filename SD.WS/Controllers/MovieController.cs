@@ -22,7 +22,7 @@ namespace SD.WS.Controllers
             return await base.Mediator.Send(query);
         }
 
-        [ProducesResponseType(typeof(MovieDto), (int)HttpStatusCode.Created)] // Für Swagger - Generierung für Status 201
+        [ProducesResponseType(typeof(MovieDto), (int)HttpStatusCode.Created)] // Für Swagger - Generierung für Status 201, damit der Status bei allen gleich ist
         [HttpPost(nameof(MovieDto))] 
         public async Task<MovieDto> CreateMovieDto(CancellationToken cancellationToken)
         {
@@ -33,5 +33,19 @@ namespace SD.WS.Controllers
             return result;
         }
 
+        [HttpPut(nameof(MovieDto) + "/{Id}")]
+        public async Task<MovieDto> UpdateMovieDto([FromRoute] Guid Id, [FromBody] MovieDto movieDto, CancellationToken cancellationToken)
+        {
+            var updateMovieDtoCommand = new UpdateMovieDtoCommand { Id = Id, MovieDto = movieDto };
+
+            var result = await base.Mediator.Send(updateMovieDtoCommand, cancellationToken);
+            return result;
+        }
+
+        [HttpDelete(nameof(MovieDto) + "/{Id}")]
+        public async Task<bool> DeleteMovieDto([FromRoute] Guid Id, CancellationToken cancellationToken)
+        {
+            return await base.Mediator.Send(new DeleteMovieDtoCommand { Id = Id }, cancellationToken);
+        }
     }
 }

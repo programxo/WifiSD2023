@@ -14,48 +14,44 @@ namespace SD.WS
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            {
+                /* Add services to the container. */
 
-            /* DBContext */
+                builder.Services.AddControllers();
 
-            var connectionString = builder.Configuration.GetConnectionString("MovieDbContext");
-            builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(connectionString));
+                /* DBContext */
 
-            /* Bootstrapping */
+                var connectionString = builder.Configuration.GetConnectionString("MovieDbContext");
+                builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(connectionString));
 
-            builder.Services.RegisterRepositories();
-            builder.Services.RegisterApplicationServices();
+                /* Bootstrapping */
 
-            /* Add services to the container. */
+                builder.Services.RegisterRepositories();
+                builder.Services.RegisterApplicationServices();
 
-            builder.Services.AddControllers();
+                /* MediatR */
 
-            /* MediatR */
+                builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MovieQueryHandler).Assembly));
+            }
 
-            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MovieQueryHandler).Assembly));
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
+            
             var app = builder.Build();
+            {
+                app.UseHttpsRedirection();
+                app.MapControllers();
+
+                app.Run();
+
+            }
 
             // Configure the HTTP request pipeline.
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI();
+            //}
+            
         }
     }
 }

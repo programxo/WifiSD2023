@@ -1,0 +1,36 @@
+﻿@host=https://localhost:7001
+@id=d945908c-dda8-43d5-9aac-232430d7f7fc
+
+### GET all Movie
+
+GET {{host}}/Movie/MovieDto
+
+
+### GET by Id
+
+GET {{host}}/Movie/MovieDto/{{id}}
+
+### PUT
+
+PUT {{host}}/Movie/MovieDto/{{id}}
+Content-Type: application/json
+
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "title": "Nothing",
+  "releaseDate": "2023-04-18T17:47:06.618Z",
+  "price": 98.25,
+  "genreId": 3,
+  "mediumTypeCode": "DVD",
+  "rating": 1
+}
+
+### POST 
+
+### DELETE
+
+DELETE {{host}}/Movie/MovieDto{{id}}
+
+
+
+
