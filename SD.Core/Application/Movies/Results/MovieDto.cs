@@ -12,7 +12,7 @@ namespace Wifi.SD.Core.Application.Movies.Results
         // for navigation from one end of an association to the other end.
         // Unlike other properties, navigation properties do not carry data.
 
-        public static MovieDto MapFrom(Movie movie)
+        public static MovieDto MapFrom(Movie movie) // MovieBase verbraucht mehr Ressourcen, 
         {
             return new MovieDto()
             {
