@@ -13,15 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{8A6896
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{C8FFC73A-8F35-47E4-A9CA-3BA7A3B089AF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{1084C5EA-21D0-4214-902B-AC26F2FF6073}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.Core", "SD.Core\SD.Core.csproj", "{A4E2D057-2412-4EB2-A39A-F8FB1CA3AC4F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.Persistence", "SD.Persistence\SD.Persistence.csproj", "{B880556E-37C5-4493-A08A-2727101FE27A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.Application", "SD.Application\SD.Application.csproj", "{897720FD-D777-4120-A4E4-8A5169DB984C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SD.WS", "SD.WS\SD.WS.csproj", "{62E89956-6176-4F29-860C-D915415C1167}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.WS", "SD.WS\SD.WS.csproj", "{62E89956-6176-4F29-860C-D915415C1167}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

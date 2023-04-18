@@ -65,7 +65,7 @@ namespace SD.Application.Movies
                 movieQuery = movieQuery.Skip(request.Skip).Take(request.Take); // Pager-Funktion in EF mit Linq
             }
 
-            var movieDtos = await movieQuery.Select(s => MovieDto.MapFrom(s)).ToListAsync(cancellationToken);
+            var movieDtos = await movieQuery.Select(s => MovieDto.MapFrom(s)).ToListAsync(cancellationToken); // Materializierung
 
             //var movieDtos = new List<MovieDto>();
             //var movies = await movieQuery.ToListAsync(cancellationToken);
