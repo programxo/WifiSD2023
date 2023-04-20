@@ -1,4 +1,4 @@
-﻿@host=https://localhost:7001
+﻿@host=https://localhost:8080
 @id=d945908c-dda8-43d5-9aac-232430d7f7fc
 
 ### GET all Movie
