@@ -54,7 +54,7 @@ namespace SD.Application.Authentication
                 return AuthenticateResult.Fail("No valid Authorization header!");
             }
 
-            if (user == null) 
+            if (user == null)
             {
                 return AuthenticateResult.Fail("Invalid Username or Password!");
             }

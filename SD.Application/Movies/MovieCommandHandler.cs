@@ -10,8 +10,7 @@ namespace SD.Application.Movies
 {
     [MapServiceDependency(nameof(MovieCommandHandler))]
     public class MovieCommandHandler : HandlerBase, IRequestHandler<CreateMovieDtoCommand, MovieDto>,
-                                                    IRequestHandler<UpdateMovieDtoCommand, MovieDto>,
-                                                    IRequestHandler<DeleteMovieDtoCommand, bool>
+                                       IRequestHandler<UpdateMovieDtoCommand, MovieDto>
     {
         protected readonly IMovieRepository movieRepository;
 
@@ -38,32 +37,20 @@ namespace SD.Application.Movies
             };
 
             await this.movieRepository.AddAsync(movie, true, cancellationToken);
+
             return MovieDto.MapFrom(movie);
         }
 
         public async Task<MovieDto> Handle(UpdateMovieDtoCommand request, CancellationToken cancellationToken)
         {
-            request.MovieDto.Id = request.Id; // Übereinstimmung mit der Id, damit niemand das überschreibt
+            request.MovieDto.Id = request.Id; // Übereinstimmung mit der Id
 
             var movie = new Movie();
 
             base.MapEntityProperties<MovieDto, Movie>(request.MovieDto, movie, null);
-
             var updMovie = await movieRepository.UpdateAsync<Movie>(movie, request.Id, true, cancellationToken);
-            return MovieDto.MapFrom(updMovie);
-        }
 
-        public async Task<bool> Handle(DeleteMovieDtoCommand request, CancellationToken cancellationToken)
-        {
-            try
-            {
-                await this.movieRepository.RemoveAsync<Movie>(request.Id, true, cancellationToken);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            return MovieDto.MapFrom(updMovie);
         }
     }
 }

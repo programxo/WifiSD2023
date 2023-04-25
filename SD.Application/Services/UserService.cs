@@ -11,7 +11,7 @@ namespace SD.Application.Services
         /* Mockups */
         List<User> _users = new()
         {
-            new User { Id = new Guid("dec29c83-e98a-4b94-b6d0-f53e10effd80"), FirstName = "Max", LastName="Musterman", UserName="ADMIN", Password = new NetworkCredential("ADMIN", "secret").SecurePassword},
+            new User { Id = new Guid("dec29c83-e98a-4b94-b6d0-f53e10effd80"), FirstName = "Max", LastName="Musterman", UserName="MovieUser", Password = new NetworkCredential("ADMIN", "733295Sa").SecurePassword},
             new User { Id = new Guid("97d5b17b-e10e-45e3-a10e-03afae858213"), FirstName = "Jo", LastName="Rip", UserName="Guest", Password = new NetworkCredential("Guest", "secret").SecurePassword},
         };
 
