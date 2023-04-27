@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SD.Persistence.Repositories.DBContext;
+using Wifi.SD.Core.Application.Movies.Queries;
 using Wifi.SD.Core.Entities.Movies;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SD.WebApp.Controllers
 {
-    public class MoviesController : Controller
+    // [Authorize (Roles = "Admin")]
+    public class MoviesController : MediatRBaseController
     {
         private readonly MovieDbContext _context;
 
@@ -19,11 +23,24 @@ namespace SD.WebApp.Controllers
             _context = context;
         }
 
-        // GET: Movies
-        public async Task<IActionResult> Index()
+        // Beispiele:
+        [AllowAnonymous]
+        public async Task<string> HelloWorld(string name)
         {
-            var movieDbContext = _context.Movies.Include(m => m.Genre).Include(m => m.MediumType);
-            return View(await movieDbContext.ToListAsync());
+            string result = string.Empty;
+            for (int i = 0; i < 10; i++)
+            {
+               result = await Task.FromResult($"Hallo {name}!");
+            }
+            return result;
+        }
+
+        // GET: Movies
+        public async Task<IActionResult> Index(CancellationToken cancellationToken)
+        {
+            var movieQuery = new GetMovieDtosQuery();
+            var result = await base.Mediator.Send(movieQuery, cancellationToken);
+            return View(result);
         }
 
         // GET: Movies/Details/5
