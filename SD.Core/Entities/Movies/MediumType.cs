@@ -2,7 +2,7 @@
 
 namespace Wifi.SD.Core.Entities.Movies
 {
-    public class MediumType // 6.
+    public class MediumType : IEntity // 6.
     {
         public MediumType()
         {

@@ -1,26 +1,26 @@
-﻿@model Wifi.SD.Core.Entities.Movies.Movie
+﻿@model Wifi.SD.Core.Application.Movies.Results.MovieDto
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1 class="row justify-content-center">Details</h1>
 
 <div>
-    <h4>Movie</h4>
+    <h4 class="row justify-content-center">Movie</h4>
     <hr />
-    <dl class="row">
+    <dl class="dl-horizontal">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genre)
+            @BasicRes.Genre
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genre.Id)
+            @Html.DisplayFor(model => model.GenreName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MediumType)
+            @BasicRes.MediumType
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MediumType.Code)
+            @(Model.MediumTypeName + " " + (Model.MediumTypeCode))
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
@@ -38,7 +38,7 @@
             @Html.DisplayNameFor(model => model.Price)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
+            @string.Format(Model.Price.ToString(), "{0:N}")
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Rating)
@@ -49,6 +49,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-secondary">@BasicRes.Edit</a> |
+    <a asp-action="Index" class="btn btn-outline-secondary">@BasicRes.Cancel</a>
 </div>

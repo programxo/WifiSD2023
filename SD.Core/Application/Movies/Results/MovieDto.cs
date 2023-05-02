@@ -12,9 +12,11 @@ namespace Wifi.SD.Core.Application.Movies.Results
         // for navigation from one end of an association to the other end.
         // Unlike other properties, navigation properties do not carry data.
 
-        private string genreName;
+        private string genreName = string.Empty;
+        private string mediumTypeName = string.Empty;
 
         public string GenreName { get => this.genreName; }
+        public string MediumTypeName { get => this.mediumTypeName; }
 
         public static MovieDto MapFrom(Movie movie) // MovieBase verbraucht mehr Ressourcen, 
         {
@@ -27,8 +29,8 @@ namespace Wifi.SD.Core.Application.Movies.Results
                 Price = movie.Price,
                 Rating = movie.Rating,
                 ReleaseDate = movie.ReleaseDate,
-                genreName = movie.Genre?.Name ?? string.Empty
-
+                genreName = movie.Genre?.Name ?? string.Empty,
+                mediumTypeName = movie.MediumType?.Name ?? string.Empty,        
             };
         }
     }

@@ -5,6 +5,10 @@ using SD.Persistence.Extensions;
 using SD.Application.Extensions;
 using SD.Persistence.Repositories.DBContext;
 using SD.Application.Movies;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +27,24 @@ builder.Services.RegisterRepositories();
 /* MediatR */
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MovieQueryHandler).Assembly));
+
+/* Browser Sprach-Erkennung */
+
+builder.Services.Configure<RequestLocalizationOptions>(opts =>
+{
+    var supportedCulture = new List<CultureInfo> { 
+        new CultureInfo("en"),
+        new CultureInfo("de")
+    };
+
+    opts.DefaultRequestCulture = new RequestCulture("de");
+    opts.SupportedCultures = supportedCulture;
+    opts.SupportedUICultures = supportedCulture;
+});
+
+/* ASP.NET MVC für lokalisierte CSHTML-Dateien konfigurieren */
+builder.Services.AddMvc().AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, opts => { opts.ResourcesPath = "Resources"; });
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -51,6 +73,10 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+/* Broswer Sprach-Erkennung aktivieren */
+var options = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(options.Value);
 
 app.MapControllerRoute(
     name: "default",

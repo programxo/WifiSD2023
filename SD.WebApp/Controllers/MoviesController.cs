@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -44,23 +45,12 @@ namespace SD.WebApp.Controllers
         }
 
         // GET: Movies/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid? id, CancellationToken cancellationToken)
         {
-            if (id == null || _context.Movies == null)
-            {
-                return NotFound();
-            }
+            var movieQuery = new GetMovieDtoQuery { Id = id.Value };
+            var result = await base.Mediator.Send(movieQuery, cancellationToken);
 
-            var movie = await _context.Movies
-                .Include(m => m.Genre)
-                .Include(m => m.MediumType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(movie);
+            return View(result);
         }
 
         // GET: Movies/Create
@@ -91,21 +81,24 @@ namespace SD.WebApp.Controllers
         }
 
         // GET: Movies/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid? id, CancellationToken cancellationToken)
         {
-            if (id == null || _context.Movies == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var movie = await _context.Movies.FindAsync(id);
-            if (movie == null)
+            var movieQuery = new GetMovieDtoQuery { Id = id.Value };
+            var result = await base.Mediator.Send(movieQuery, cancellationToken);
+
+            if (result == null)
             {
                 return NotFound();
             }
-            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", movie.GenreId);
-            ViewData["MediumTypeCode"] = new SelectList(_context.MediumTypes, "Code", "Code", movie.MediumTypeCode);
-            return View(movie);
+
+            //ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", movie.GenreId);
+            //ViewData["MediumTypeCode"] = new SelectList(_context.MediumTypes, "Code", "Code", movie.MediumTypeCode);
+            return View(result);
         }
 
         // POST: Movies/Edit/5
@@ -113,8 +106,11 @@ namespace SD.WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,ReleaseDate,Price,GenreId,MediumTypeCode,Rating")] Movie movie)
+        public async Task<IActionResult> Edit(Guid id, CancellationToken cancellationToken)
         {
+            var movieQuery = new GetMovieDtoQuery { Id = id.Value };
+            var result = await base.Mediator.Send(movieQuery, cancellationToken);
+
             if (id != movie.Id)
             {
                 return NotFound();
