@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SD.Persistence.Repositories.DBContext;
+using SD.WebApp.Extensions;
 using Wifi.SD.Core.Application.Movies.Queries;
+using Wifi.SD.Core.Application.Movies.Results;
 using Wifi.SD.Core.Entities.Movies;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SD.WebApp.Controllers
 {
@@ -83,21 +79,23 @@ namespace SD.WebApp.Controllers
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(Guid? id, CancellationToken cancellationToken)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var movieQuery = new GetMovieDtoQuery { Id = id.Value };
-            var result = await base.Mediator.Send(movieQuery, cancellationToken);
+                var movieQuery = new GetMovieDtoQuery { Id = id.Value };
+                var result = await base.Mediator.Send(movieQuery, cancellationToken);
 
-            if (result == null)
-            {
-                return NotFound();
-            }
+                if (result == null)
+                {
+                    return NotFound();
+                }
 
-            //ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", movie.GenreId);
-            //ViewData["MediumTypeCode"] = new SelectList(_context.MediumTypes, "Code", "Code", movie.MediumTypeCode);
+            await this.InitMasterDataViewData(result, cancellationToken);
+
+            //ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", result.GenreId);
+            //ViewData["MediumTypeCode"] = new SelectList(_context.MediumTypes, "Code", "Code", result.MediumTypeCode);
             return View(result);
         }
 
@@ -106,11 +104,8 @@ namespace SD.WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Edit(Guid? id, [Bind("Id,Title,ReleaseDate,Price,GenreId,MediumTypeCode,Rating")] Movie movie)
         {
-            var movieQuery = new GetMovieDtoQuery { Id = id.Value };
-            var result = await base.Mediator.Send(movieQuery, cancellationToken);
-
             if (id != movie.Id)
             {
                 return NotFound();
@@ -180,9 +175,32 @@ namespace SD.WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        #region Private helpers
         private bool MovieExists(Guid id)
         {
           return (_context.Movies?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        private async Task InitMasterDataViewData(MovieDto movieDto, CancellationToken cancellationToken)
+        {
+            var genres = this.HttpContext.Session.Get<IEnumerable<Genre>>("Genres");
+            if (genres == null)
+            {
+                genres = await this.Mediator.Send(new GetGenresQuery(), cancellationToken);
+                this.HttpContext.Session.Set<IEnumerable<Genre>>("Genres", genres);
+            }
+
+            var mediumTypes = this.HttpContext.Session.Get < IEnumerable<MediumType>>("MediumTypes");
+            if (mediumTypes == null)
+            {
+                mediumTypes = await this.Mediator.Send(new GetMediumTypesQuery(), cancellationToken);
+
+                this.HttpContext.Session.Set<IEnumerable<MediumType>>("MediumTypes", mediumTypes);
+            }
+
+            ViewBag.Genres = new SelectList(genres, nameof(Genre.Id), nameof(Genre.Name), movieDto.GenreId);
+            ViewData.Add("MediumTypes", new SelectList(mediumTypes, nameof(MediumType.Code), nameof(MediumType.Name), movieDto.MediumTypeCode)); ;
+        }
+        #endregion
     }
 }

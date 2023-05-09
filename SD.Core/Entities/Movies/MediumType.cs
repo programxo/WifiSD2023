@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Wifi.SD.Core.Entities.Movies
 {
@@ -17,6 +18,7 @@ namespace Wifi.SD.Core.Entities.Movies
         [MaxLength(32), MinLength(2)]
         public virtual string Name { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Movie> Movies { get; }
     }
 }
