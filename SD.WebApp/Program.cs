@@ -9,6 +9,9 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
+using Globalization.Attributes;
+using Globalization;
+using System.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,5 +95,7 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.UseSession();
+
+LocalizedDescriptionAttribute.Setup(new ResourceManager(typeof(BasicRes)));
 
 app.Run();

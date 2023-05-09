@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SD.Application.Extensions;
 using SD.Persistence.Repositories.DBContext;
 using SD.WebApp.Extensions;
 using Wifi.SD.Core.Application.Movies.Queries;
@@ -190,6 +191,13 @@ namespace SD.WebApp.Controllers
                 this.HttpContext.Session.Set<IEnumerable<Genre>>("Genres", genres);
             }
 
+            var localizedRatings = this.HttpContext.Session.Get<List<KeyValuePair<object, string>>>("Ratings");
+            if (localizedRatings == null)
+            {
+                localizedRatings = EnumExtension.EnumToList<Ratings>();
+                this.HttpContext.Session.Set<List<KeyValuePair<object, string>>>("Ratings", localizedRatings);
+            }
+
             var mediumTypes = this.HttpContext.Session.Get < IEnumerable<MediumType>>("MediumTypes");
             if (mediumTypes == null)
             {
@@ -200,6 +208,7 @@ namespace SD.WebApp.Controllers
 
             ViewBag.Genres = new SelectList(genres, nameof(Genre.Id), nameof(Genre.Name), movieDto.GenreId);
             ViewData.Add("MediumTypes", new SelectList(mediumTypes, nameof(MediumType.Code), nameof(MediumType.Name), movieDto.MediumTypeCode)); ;
+            ViewBag.Ratings = new SelectList(localizedRatings, "Key", "Value", movieDto.Rating);
         }
         #endregion
     }

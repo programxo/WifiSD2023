@@ -1,4 +1,5 @@
 ﻿using Globalization;
+using Globalization.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,10 +7,15 @@ namespace Wifi.SD.Core.Entities.Movies
 {
     public enum Ratings : byte
     {
+        [LocalizedDescription(nameof(BasicRes.Ratings_1))]
         VeryBad = 1,
+        [LocalizedDescription(nameof(BasicRes.Ratings_2))]
         Bad,
+        [LocalizedDescription(nameof(BasicRes.Ratings_3))]
         Medium,
+        [LocalizedDescription(nameof(BasicRes.Ratings_4))]
         Good,
+        [LocalizedDescription(nameof(BasicRes.Ratings_5))]
         VeryGood
     }
 
