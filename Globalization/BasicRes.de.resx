@@ -138,6 +138,9 @@
   <data name="MediumType" xml:space="preserve">
     <value>Mediumtyp</value>
   </data>
+  <data name="Movies" xml:space="preserve">
+    <value>Filme</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Bezeichnung</value>
   </data>

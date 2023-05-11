@@ -124,6 +124,15 @@ namespace Globalization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Movies.
+        /// </summary>
+        public static string Movies {
+            get {
+                return ResourceManager.GetString("Movies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {

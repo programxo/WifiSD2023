@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using SD.Application.Extensions;
 using SD.Persistence.Repositories.DBContext;
 using SD.WebApp.Extensions;
+using System.Threading;
+using Wifi.SD.Core.Application.Movies.Commands;
 using Wifi.SD.Core.Application.Movies.Queries;
 using Wifi.SD.Core.Application.Movies.Results;
 using Wifi.SD.Core.Entities.Movies;
@@ -51,11 +52,13 @@ namespace SD.WebApp.Controllers
         }
 
         // GET: Movies/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id");
-            ViewData["MediumTypeCode"] = new SelectList(_context.MediumTypes, "Code", "Code");
-            return View();
+            var result = new MovieDto { Rating = Ratings.Medium, GenreId = 1, MediumTypeCode = "BR" };
+            await this.InitMasterDataViewData(result, cancellationToken);
+
+            result.ReleaseDate = DateTime.Now;
+            return View(result);
         }
 
         // POST: Movies/Create
@@ -63,18 +66,22 @@ namespace SD.WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Price,GenreId,MediumTypeCode,Rating")] Movie movie)
+        public async Task<IActionResult> Create(MovieDto movieDto, CancellationToken cancellationToken)
         {
             if (ModelState.IsValid)
             {
-                movie.Id = Guid.NewGuid();
-                _context.Add(movie);
-                await _context.SaveChangesAsync();
+                var command = new CreateMovieDtoCommand();
+                /* Movie neu anlegen */
+                var newMovieDto = await base.Mediator.Send(command, cancellationToken);
+                movieDto.Id = newMovieDto.Id;
+
+                await Mediator.Send(new UpdateMovieDtoCommand { Id = newMovieDto.Id, MovieDto = movieDto }, cancellationToken);
+ 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", movie.GenreId);
-            ViewData["MediumTypeCode"] = new SelectList(_context.MediumTypes, "Code", "Code", movie.MediumTypeCode);
-            return View(movie);
+
+            await this.InitMasterDataViewData(movieDto, cancellationToken);
+            return View(movieDto);
         }
 
         // GET: Movies/Edit/5
@@ -105,76 +112,52 @@ namespace SD.WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid? id, [Bind("Id,Title,ReleaseDate,Price,GenreId,MediumTypeCode,Rating")] Movie movie)
+        public async Task<IActionResult> Edit(Guid id, MovieDto movieDto, CancellationToken cancellationToken)
         {
-            if (id != movie.Id)
+            if (id != movieDto.Id)
             {
                 return NotFound();
             }
+
+            
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(movie);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MovieExists(movie.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var command = new UpdateMovieDtoCommand() { MovieDto = movieDto, Id = id };
+                await base.Mediator.Send(command, cancellationToken);
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", movie.GenreId);
-            ViewData["MediumTypeCode"] = new SelectList(_context.MediumTypes, "Code", "Code", movie.MediumTypeCode);
-            return View(movie);
+
+            await this.InitMasterDataViewData(movieDto, cancellationToken);
+            return View(movieDto);
         }
 
         // GET: Movies/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            if (id == null || _context.Movies == null)
+            var query = new GetMovieDtoQuery { Id = id };
+            var result =  await base.Mediator.Send(query, cancellationToken);
+
+            if(result == null)
             {
                 return NotFound();
             }
 
-            var movie = await _context.Movies
-                .Include(m => m.Genre)
-                .Include(m => m.MediumType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(movie);
+            await InitMasterDataViewData(result, cancellationToken);
+            return View(result);
         }
 
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id, CancellationToken cancellationToken)
         {
-            if (_context.Movies == null)
-            {
-                return Problem("Entity set 'MovieDbContext.Movies'  is null.");
-            }
-            var movie = await _context.Movies.FindAsync(id);
-            if (movie != null)
-            {
-                _context.Movies.Remove(movie);
-            }
-            
-            await _context.SaveChangesAsync();
+            await base.Mediator.Send(new DeleteMovieDtoCommand { Id = id }, cancellationToken);
+
             return RedirectToAction(nameof(Index));
         }
+
 
         #region Private helpers
         private bool MovieExists(Guid id)
