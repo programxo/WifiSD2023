@@ -1,0 +1,45 @@
+﻿
+<div id="@ViewData["ModalId"]" role="dialog" aria-labelledby="ConfirmLabel" aria-hidden="true" class="modal" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ConfirmModalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@BasicRes.Cancel"></button>
+            </div>
+            <div class="modal-body">
+
+                @*Felder werden dynamisch hier eingefügt*@
+                <dl id="modalBody" class="row">
+
+
+                </dl>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@BasicRes.Cancel</button>
+
+                <div id="DeleteControls">
+
+                    <form asp-action="@ViewData["Action"]" asp-controller="@ViewData["Controller"] method="post">
+                        @Html.AntiForgeryToken() @*Immer nötig um Token-Manipulation zu verhindern*@
+                        <input type="hidden" id="Id" name="Id" />
+                        <input type="submit" value="@BasicRes.Delete" class="btn btn-danger" />
+                    </form>
+
+                </div>
+
+                <div id="DeleteControls">
+
+                    <form asp-action="@ViewData["Action"]" asp-controller="@ViewData["Controller"] method="post">
+                        @Html.AntiForgeryToken() @*Immer nötig um Token-Manipulation zu verhindern*@
+                        <input type="hidden" id="Id" name="Id" />
+                        <input type="submit" value="@BasicRes.Delete" class="btn btn-danger" />
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
