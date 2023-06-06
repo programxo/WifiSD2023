@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="C:\Users\User\.nuget\packages\gridmvccore\6.0.4\contentFiles\any\net7.0\Resources\css\gridmvc-bootstrap3.css" />
+    <Content Remove="C:\Users\User\.nuget\packages\gridmvccore\6.0.4\contentFiles\any\net7.0\Resources\css\gridmvc-bootstrap3.min.css" />
+    <Content Remove="C:\Users\User\.nuget\packages\gridmvccore\6.0.4\contentFiles\any\net7.0\Resources\css\gridmvc.css" />
+    <Content Remove="C:\Users\User\.nuget\packages\gridmvccore\6.0.4\contentFiles\any\net7.0\Resources\css\gridmvc.min.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GridMvcCore" Version="6.0.4" />
     <PackageReference Include="jquery-globalize.0.1.3" Version="0.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />

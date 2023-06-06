@@ -7,7 +7,8 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">@BasicRes.CreateNewMovie</a>
+    @*<a asp-action="Create">@BasicRes.CreateNewMovie</a>*@
+    <a href="/Movies/Create" title="@BasicRes.CreateNewMovie" class="btn btn-sm btn-primary"><i class="fa fa-add"></i>&nbsp;@BasicRes.CreateNewMovie</a>
 </p>
 <table id="MoviesTable" class="table">
     <thead>
@@ -53,12 +54,13 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Rating)
+
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">@BasicRes.Edit</a> |
-                    <a href="/Movies/Details/@item.Id" title="@BasicRes.Details" data-name="Details">@BasicRes.Details</a> |
-                @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
-                    <a href="/Movies/Delete/@item.Id" title="@BasicRes.Delete" data-id="@item.Id" data-name="Delete">@BasicRes.Delete</a> @*Perfect Binding in html*@
+                    <a href="/Movies/Details/@item.Id" id="Details" name="Details" title="@BasicRes.Details" data-name="Details" class="btn btn-sm btn-outline-check btn-custom" title="@BasicRes.Details" data-name="Details"><i class="fa fa-info"></i></a> |
+                    <a href="/Movies/Edit/@item.Id" title="@BasicRes.Edit" class="btn btn-sm btn-outline-secondary btn-custom"><i class="fa fa-edit"></i>&nbsp;@BasicRes.Edit</a> |
+
+                    <a href="/Movies/Delete/@item.Id" title="@BasicRes.Delete" class="btn btn-sm btn-outline-danger btn-custom" title="@BasicRes.Delete" data-id="@item.Id" data-name="Delete"><i class="fa fa-remove"></i>&nbsp;@BasicRes.Delete</a> @*Perfect Binding in html*@
             </td>
         </tr>
 }

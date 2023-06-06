@@ -12,6 +12,8 @@ using Microsoft.Extensions.Options;
 using Globalization.Attributes;
 using Globalization;
 using System.Resources;
+using System.Drawing;
+using GridMvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +64,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+builder.Services.AddGridMvc();
 
 var app = builder.Build();
 

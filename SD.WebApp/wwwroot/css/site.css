@@ -1,5 +1,11 @@
+
+
+btn-custom{
+    width:36px;
+}
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {

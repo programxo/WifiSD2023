@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GridMvc;
+using GridMvc.Server;
+using GridShared;
+using GridShared.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SD.Application.Extensions;
 using SD.Persistence.Repositories.DBContext;
+using SD.WebApp.Components;
 using SD.WebApp.Extensions;
-using System.Threading;
+using System.Reflection.Metadata.Ecma335;
 using Wifi.SD.Core.Application.Movies.Commands;
 using Wifi.SD.Core.Application.Movies.Queries;
 using Wifi.SD.Core.Application.Movies.Results;
@@ -40,6 +45,47 @@ namespace SD.WebApp.Controllers
             var movieQuery = new GetMovieDtosQuery();
             var result = await base.Mediator.Send(movieQuery, cancellationToken);
             return View(result);
+        }
+
+        // GET: Movies, using the GridMVC
+        public async Task<IActionResult> IndexGrid(string gridState = "", CancellationToken cancellationToken = default)
+        {
+            string returnURL = "/Movies/IndexGrid";
+
+            IQueryCollection query = HttpContext.Request.Query;
+
+            if (!string.IsNullOrEmpty(gridState))
+            {
+                try
+                {
+                    query = new QueryCollection(StringExtensions.GetQuery(gridState));
+                }
+                catch (Exception)
+                {
+
+                    // gridState not valid
+                }
+            }
+
+            var locale = System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+            Action<IGridColumnCollection<MovieDto>> c =>
+            {
+                c.Add(c => c.Title).Encoded(false).Sanitized(false).SetWidth(200);
+                c.Add(c => c.MediumTypeCode).Encoded(false).SetWidth(50);
+            };
+
+            var movieDtos = await this.Mediator.Send(new GetMovieDtosQuery(), cancellationToken);
+            var server = new GridServer<MovieDto>(movieDtos, query, false, "moviesGrid", c, 10, locale)
+                .Sortable()
+                .Filterable()
+                .WithMultipleFilters()
+                .Groupable()
+                .ClearFiltersButton(true)
+                .Selectable(true)
+                .SetStriped(true)
+                .ChangePageSize(true);
+
+            return View(server.Grid);
         }
 
         // GET: Movies/Details/5
